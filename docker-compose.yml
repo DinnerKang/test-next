@@ -1,0 +1,26 @@
+version: "3"
+services:
+  nginx:
+    container_name: "nginx"
+    build:
+      # nginx directory를 root로 사용
+      context: ./nginx
+      # ./nginx/Dockerfile을 사용해서 build
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - next
+  next:
+    container_name: "next"
+    restart: "on-failure"
+    build:
+      context: ./next
+      dockerfile: Dockerfile
+    volumes:
+      # hot reload를 위해 mount
+      - "./next:/usr/src/next"
+      - "/usr/src/next/node_modules"
+      - "/usr/src/next/.next" 
+    ports:
+      - "3333:3333"
